@@ -6,7 +6,7 @@ import sys
 from chapter_cutter.core import split_file, merge_folder
 
 LANGS = [
-    'Spanish', 'English', 'French', 'German', 'Italian', 'Portuguese', 'Russian', 'Chinese', 'Japanese'
+    'Spanish', 'English', 'French', 'German', 'Italian', 'Portuguese', 'Russian', 'Chinese', 'Japanese', 'Korean'
 ]
 
 class App(tk.Tk):
@@ -24,6 +24,21 @@ class App(tk.Tk):
         except Exception:
             pass
 
+        # small book icon in top-left inside the window
+        img_path = self._resource_path('app-icon.png')
+        self._small_icon = None
+        try:
+            if os.path.exists(img_path):
+                try:
+                    self._small_icon = tk.PhotoImage(file=img_path)
+                except Exception:
+                    # fallback: try with PIL
+                    from PIL import Image, ImageTk
+                    pil = Image.open(img_path).resize((32,32), Image.LANCZOS)
+                    self._small_icon = ImageTk.PhotoImage(pil)
+        except Exception:
+            self._small_icon = None
+
         style = ttk.Style(self)
         style.theme_use('clam')
         style.configure('TFrame', background='#f0f4f8')
@@ -35,8 +50,14 @@ class App(tk.Tk):
         frm = ttk.Frame(self, padding=14)
         frm.pack(fill='both', expand=True)
 
-        # Split controls
-        ttk.Label(frm, text='Cortar archivo (.txt)', style='Header.TLabel').grid(column=0, row=0, sticky='w', columnspan=4)
+        # Header row with small icon
+        hframe = ttk.Frame(frm)
+        hframe.grid(column=0, row=0, columnspan=4, sticky='ew')
+        if self._small_icon:
+            lbl_icon = ttk.Label(hframe, image=self._small_icon, background=style.lookup('TFrame','background'))
+            lbl_icon.pack(side='left', padx=(0,8))
+
+        ttk.Label(hframe, text='Cortar archivo (.txt)', style='Header.TLabel').pack(side='left')
         self.split_path_var = tk.StringVar()
         e1 = ttk.Entry(frm, textvariable=self.split_path_var)
         e1.grid(column=0, row=1, columnspan=3, sticky='ew', padx=(0,8))

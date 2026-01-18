@@ -5,7 +5,7 @@ a = Analysis(
     ['C:\\Users\\adryl\\Downloads\\book-translator\\Chapter-cutter\\chapter_cutter\\cli.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('C:\\Users\\adryl\\Downloads\\book-translator\\Chapter-cutter\\app-icon.png', '.'), ('C:\\Users\\adryl\\Downloads\\book-translator\\Chapter-cutter\\app-icon.ico', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

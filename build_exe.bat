@@ -7,8 +7,12 @@ REM Build both console CLI and GUI exe
 REM Convert PNG to ICO
 python "%SCRIPT_DIR%tools\convert_icon.py"
 SET ICO_PATH=%SCRIPT_DIR%app-icon.ico
-pyinstaller --clean --onefile --name chapter_cutter_cli --console --icon "%ICO_PATH%" "%SCRIPT_DIR%chapter_cutter\cli.py"
-pyinstaller --clean --onefile --name chapter_cutter_gui --windowed --icon "%ICO_PATH%" "%SCRIPT_DIR%chapter_cutter\gui.py"
+python "%SCRIPT_DIR%tools\convert_icon.py"
+SET ICO_PATH=%SCRIPT_DIR%app-icon.ico
+
+REM Include app-icon.png and app-icon.ico inside the executable bundle so GUI can load it
+pyinstaller --clean --onefile --name chapter_cutter_cli --console --icon "%ICO_PATH%" --add-data "%SCRIPT_DIR%app-icon.png;." --add-data "%SCRIPT_DIR%app-icon.ico;." "%SCRIPT_DIR%chapter_cutter\cli.py"
+pyinstaller --clean --onefile --name chapter_cutter_gui --windowed --icon "%ICO_PATH%" --add-data "%SCRIPT_DIR%app-icon.png;." --add-data "%SCRIPT_DIR%app-icon.ico;." "%SCRIPT_DIR%chapter_cutter\gui.py"
 
 REM remove original PNG as requested
 IF EXIST "%SCRIPT_DIR%app-icon.png" DEL /F /Q "%SCRIPT_DIR%app-icon.png"
