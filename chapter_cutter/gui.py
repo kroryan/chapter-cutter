@@ -57,34 +57,34 @@ class App(tk.Tk):
             lbl_icon = ttk.Label(hframe, image=self._small_icon, background=style.lookup('TFrame','background'))
             lbl_icon.pack(side='left', padx=(0,8))
 
-        ttk.Label(hframe, text='Cortar archivo (.txt)', style='Header.TLabel').pack(side='left')
+        ttk.Label(hframe, text='Split file (.txt)', style='Header.TLabel').pack(side='left')
         self.split_path_var = tk.StringVar()
         e1 = ttk.Entry(frm, textvariable=self.split_path_var)
         e1.grid(column=0, row=1, columnspan=3, sticky='ew', padx=(0,8))
         ttk.Button(frm, text='Seleccionar archivo', command=self.select_file, style='Accent.TButton').grid(column=3, row=1, sticky='e')
 
         # Language
-        ttk.Label(frm, text='Idioma:').grid(column=0, row=2, sticky='w', pady=(8,0))
+        ttk.Label(frm, text='Language:').grid(column=0, row=2, sticky='w', pady=(8,0))
         self.lang_var = tk.StringVar(value='Spanish')
         cb = ttk.Combobox(frm, values=LANGS, textvariable=self.lang_var, state='readonly', width=24)
         cb.grid(column=0, row=3, sticky='w')
 
-        ttk.Label(frm, text='Salida (carpeta opcional)').grid(column=1, row=2, sticky='w', pady=(8,0))
+        ttk.Label(frm, text='Output (optional folder)').grid(column=1, row=2, sticky='w', pady=(8,0))
         self.out_dir_var = tk.StringVar()
         e2 = ttk.Entry(frm, textvariable=self.out_dir_var)
         e2.grid(column=1, row=3, columnspan=2, sticky='ew', padx=(0,8))
-        ttk.Button(frm, text='Seleccionar carpeta', command=self.select_out_folder).grid(column=3, row=3, sticky='e')
+        ttk.Button(frm, text='Select folder', command=self.select_out_folder).grid(column=3, row=3, sticky='e')
 
-        ttk.Button(frm, text='Cortar archivo', command=self.do_split, style='Accent.TButton').grid(column=0, row=4, pady=(12,0), sticky='w')
+        ttk.Button(frm, text='Split file', command=self.do_split, style='Accent.TButton').grid(column=0, row=4, pady=(12,0), sticky='w')
 
         # Merge controls
         ttk.Separator(frm, orient='horizontal').grid(column=0, row=5, columnspan=4, sticky='ew', pady=14)
-        ttk.Label(frm, text='Fusionar capítulos (.txt)', style='Header.TLabel').grid(column=0, row=6, sticky='w', columnspan=4)
+        ttk.Label(frm, text='Merge chapters (.txt)', style='Header.TLabel').grid(column=0, row=6, sticky='w', columnspan=4)
         self.merge_folder_var = tk.StringVar()
         e3 = ttk.Entry(frm, textvariable=self.merge_folder_var)
         e3.grid(column=0, row=7, columnspan=3, sticky='ew', padx=(0,8))
-        ttk.Button(frm, text='Seleccionar carpeta', command=self.select_merge_folder).grid(column=3, row=7, sticky='e')
-        ttk.Button(frm, text='Fusionar', command=self.do_merge, style='Accent.TButton').grid(column=0, row=8, pady=(12,0), sticky='w')
+        ttk.Button(frm, text='Select folder', command=self.select_merge_folder).grid(column=3, row=7, sticky='e')
+        ttk.Button(frm, text='Merge', command=self.do_merge, style='Accent.TButton').grid(column=0, row=8, pady=(12,0), sticky='w')
 
         # Status
         self.status_var = tk.StringVar(value='Listo')
@@ -117,7 +117,7 @@ class App(tk.Tk):
     def do_split(self):
         path = self.split_path_var.get().strip()
         if not path or not os.path.isfile(path):
-            messagebox.showerror('Error', 'Selecciona un archivo .txt válido para cortar')
+            messagebox.showerror('Error', 'Select a valid .txt file to split')
             return
         lang = self.lang_var.get()
         out = self.out_dir_var.get().strip() or None
@@ -129,7 +129,7 @@ class App(tk.Tk):
             self.status_var.set('Cortando...')
             files = split_file(path, lang=lang, out_dir=out)
             self.status_var.set(f'Wrote {len(files)} files to {os.path.dirname(files[0]) if files else out}')
-            messagebox.showinfo('OK', f'Se han escrito {len(files)} archivos.')
+            messagebox.showinfo('OK', f'Wrote {len(files)} files.')
         except Exception as e:
             messagebox.showerror('Error', str(e))
             self.status_var.set('Error')
@@ -137,7 +137,7 @@ class App(tk.Tk):
     def do_merge(self):
         folder = self.merge_folder_var.get().strip()
         if not folder or not os.path.isdir(folder):
-            messagebox.showerror('Error', 'Selecciona una carpeta válida con capítulos .txt')
+            messagebox.showerror('Error', 'Select a valid folder containing chapter .txt files')
             return
         t = threading.Thread(target=self._merge_thread, args=(folder,), daemon=True)
         t.start()
@@ -147,7 +147,7 @@ class App(tk.Tk):
             self.status_var.set('Fusionando...')
             out = merge_folder(folder)
             self.status_var.set(f'Merged into {out}')
-            messagebox.showinfo('OK', f'Fusionado a: {out}')
+            messagebox.showinfo('OK', f'Merged into: {out}')
         except Exception as e:
             messagebox.showerror('Error', str(e))
             self.status_var.set('Error')
